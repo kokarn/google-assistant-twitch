@@ -72,9 +72,10 @@ class Twitch {
 
     getStreams ( channel ) {
         return new Promise( ( resolve, reject ) => {
-            this.request( `/api/channels/${ channel }/access_token` )
+            const formattedChannel = channel.toLowerCase();
+            this.request( `/api/channels/${ formattedChannel }/access_token` )
                 .then( ( channelResponse ) => {
-                    const playlistUrl = `https://usher.ttvnw.net/api/channel/hls/${ channel }.m3u8?player=twitchweb&token=${ channelResponse.token }&sig=${ channelResponse.sig }&allow_audio_only=true&allow_source=true&type=any&p=${ Math.floor( Math.random() * 999999 ) }`;
+                    const playlistUrl = `https://usher.ttvnw.net/api/channel/hls/${ formattedChannel }.m3u8?player=twitchweb&token=${ channelResponse.token }&sig=${ channelResponse.sig }&allow_audio_only=true&allow_source=true&type=any&p=${ Math.floor( Math.random() * 999999 ) }`;
 
                     https.get( playlistUrl, ( response ) => {
                         response.setEncoding( 'utf8' );
