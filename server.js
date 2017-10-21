@@ -14,8 +14,6 @@ const wss = new SocketServer( {
 const twitch = new Twitch( process.env.CLIENT_ID, process.env.CLIENT_SECRET );
 const DEFAULT_PORT = 3000;
 
-// 18181682
-
 const sendMessage = function sendMessage ( type, content ) {
     wss.clients.forEach( ( client ) => {
         client.send( JSON.stringify( {
