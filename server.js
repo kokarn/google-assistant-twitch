@@ -58,6 +58,7 @@ app.get( '/play/:streamName', ( request, response ) => {
     twitch.getStreams( request.params.streamName )
         .then( ( streams ) => {
             sendMessage( 'play', streams );
+            response.send( `Playing ${ request.params.streamName }` );
         } )
         .catch( ( someError ) => {
             console.error( someError );
