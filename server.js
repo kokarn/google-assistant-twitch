@@ -14,6 +14,7 @@ const wss = new SocketServer( {
 } );
 const twitch = new Twitch( process.env.CLIENT_ID, process.env.CLIENT_SECRET );
 const DEFAULT_PORT = 3000;
+const MAX_STREAMS = 12;
 
 let validStreams = [];
 
@@ -147,7 +148,7 @@ app.get( '/live/:userId', ( request, response ) => {
                 return dataset.display_name;
             } );
 
-            let message = `Currently live is ${ liveStreams.splice( 0, 15 ).join( ', ' ) }`;
+            let message = `Currently live is ${ liveStreams.splice( 0, MAX_STREAMS ).join( ', ' ) }`;
 
             // Replace final ', ' with ' and ';
             message = message.replace( /, (?=[^,]*$)/, ' and ' );
