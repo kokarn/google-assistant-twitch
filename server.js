@@ -3,6 +3,7 @@ const http = require( 'http' );
 const express = require( 'express' );
 const getUrls = require( 'get-urls' );
 const SocketServer = require( 'ws' ).Server;
+const soundFuzzy = require( 'clj-fuzzy' );
 
 const Twitch = require( './modules/twitch' );
 
@@ -14,6 +15,8 @@ const wss = new SocketServer( {
 const twitch = new Twitch( process.env.CLIENT_ID, process.env.CLIENT_SECRET );
 const DEFAULT_PORT = 3000;
 
+let validStreams = [];
+
 const sendMessage = function sendMessage ( type, content ) {
     wss.clients.forEach( ( client ) => {
         client.send( JSON.stringify( {
@@ -21,10 +24,42 @@ const sendMessage = function sendMessage ( type, content ) {
             content: content,
         } ) );
     } );
-}
+};
+
+const findBestMatch = function findBestMatch ( channel ) {
+    let parsedChannel = decodeURIComponent( channel ).toLowerCase();
+    parsedChannel = parsedChannel.replace( /\s/g, '' );
+    let bestMatch = {
+        score: 0,
+    };
+
+
+    if ( validStreams[ channel ] ) {
+        return channel;
+    }
+
+    for ( let i = 0; i < validStreams.length; i = i + 1 ) {
+        let score = soundFuzzy.metrics.dice( parsedChannel, validStreams[ i ] );
+
+        if ( score > bestMatch.score ) {
+            bestMatch = {
+                channel: validStreams[ i ],
+                score,
+            };
+        }
+    }
+
+    if ( bestMatch.score > 0.5 ) {
+        return bestMatch.channel;
+    }
+
+    return parsedChannel;
+};
 
 app.get( '/playing/:streamName', ( request, response ) => {
-    twitch.getLiveData( request.params.streamName )
+    const channelName = findBestMatch( request.params.streamName );
+
+    twitch.getLiveData( channelName )
         .then( ( userInfo ) => {
             let message;
 
@@ -105,11 +140,16 @@ app.get( '/live/:userId', ( request, response ) => {
                 return 0;
             } );
             const liveStreams = completeData.map( ( dataset ) => {
+                if ( !validStreams[ dataset.display_name ] ) {
+                    validStreams.push( dataset.display_name.toLowerCase() );
+                }
+
                 return dataset.display_name;
             } );
 
             let message = `Currently live is ${ liveStreams.splice( 0, 15 ).join( ', ' ) }`;
 
+            // Replace final ', ' with ' and ';
             message = message.replace( /, (?=[^,]*$)/, ' and ' );
 
             sendMessage( 'message', message );

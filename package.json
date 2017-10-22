@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "engines": {
-      "node": "^8.5.0"
+    "node": "^8.5.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "clj-fuzzy": "^0.4.1",
     "express": "^4.16.2",
     "get-urls": "^7.0.0",
     "m3u8-parser": "^3.0.0",
