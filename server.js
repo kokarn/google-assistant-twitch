@@ -15,6 +15,7 @@ const wss = new SocketServer( {
 const twitch = new Twitch( process.env.CLIENT_ID, process.env.CLIENT_SECRET );
 const DEFAULT_PORT = 3000;
 const MAX_STREAMS = 12;
+const DICE_LIMIT = 0.5;
 
 let validStreams = [];
 
@@ -50,7 +51,7 @@ const findBestMatch = function findBestMatch ( channel ) {
         }
     }
 
-    if ( bestMatch.score > 0.5 ) {
+    if ( bestMatch.score > DICE_LIMIT ) {
         return bestMatch.channel;
     }
 
