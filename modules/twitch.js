@@ -64,7 +64,7 @@ class Twitch {
             case 'PLAYERUNKNOWN\'S BATTLEGROUNDS':
                 return 'PUBG';
             case 'Counter-Strike: Global Offensive':
-                return 'CS: GO';
+                return 'CSGO';
             default:
                 return gameName;
         }
