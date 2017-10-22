@@ -78,6 +78,10 @@ app.get( '/playing/:streamName', ( request, response ) => {
                     displayStatus = displayStatus.replace( url, '' );
                 }
 
+                if ( !validStreams[ userInfo.channel.display_name ] ) {
+                    validStreams.push( userInfo.channel.display_name.toLowerCase() );
+                }
+
                 message = `${ userInfo.channel.display_name } is playing ${ twitch.getShortGameName( userInfo.game ) } titled ${ displayStatus }`;
             }
 
