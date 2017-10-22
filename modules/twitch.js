@@ -61,12 +61,12 @@ class Twitch {
 
     getShortGameName ( gameName ) {
         switch ( gameName ) {
-            case 'Super Smash Bros. for Wii U':
-                return 'Smash 4';
-            case 'PLAYERUNKNOWN\'S BATTLEGROUNDS':
-                return 'PUBG';
             case 'Counter-Strike: Global Offensive':
                 return 'CSGO';
+            case 'PLAYERUNKNOWN\'S BATTLEGROUNDS':
+                return 'PUBG';
+            case 'Super Smash Bros. for Wii U':
+                return 'Smash 4';
             default:
                 return gameName;
         }
