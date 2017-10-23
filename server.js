@@ -94,10 +94,12 @@ app.get( '/playing/:streamName', ( request, response ) => {
 } );
 
 app.get( '/play/:streamName', ( request, response ) => {
-    twitch.getStreams( request.params.streamName )
+    const channelName = findBestMatch( request.params.streamName );
+
+    twitch.getStreams( channelName )
         .then( ( streams ) => {
             sendMessage( 'play', streams );
-            response.send( `Playing ${ request.params.streamName }` );
+            response.send( `Playing ${ channelName }` );
         } )
         .catch( ( someError ) => {
             console.error( someError );
